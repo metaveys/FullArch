@@ -1,7 +1,11 @@
 import { promises as fs } from "fs";
 import path from "path";
 
-const dbPath = path.join(process.cwd(), "data");
+// Vercel'de /tmp kullan, local'de data/ kullan
+const isVercel = process.env.VERCEL === "1";
+const dbPath = isVercel 
+  ? path.join("/tmp", "data")
+  : path.join(process.cwd(), "data");
 const submissionsPath = path.join(dbPath, "submissions.json");
 const contentPath = path.join(dbPath, "content.json");
 
@@ -9,8 +13,11 @@ const contentPath = path.join(dbPath, "content.json");
 async function ensureDbDir() {
   try {
     await fs.mkdir(dbPath, { recursive: true });
-  } catch (error) {
-    // Dizin zaten varsa hata vermez
+  } catch (error: any) {
+    // Dizin zaten varsa veya yazma izni yoksa hata vermez
+    if (error.code !== "EEXIST") {
+      console.warn("Veritabanı dizini oluşturulamadı:", error.message);
+    }
   }
 }
 

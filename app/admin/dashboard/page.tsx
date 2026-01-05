@@ -20,9 +20,14 @@ interface FormSubmission {
   read: boolean;
 }
 
-function getAuthHeader() {
+function getAuthHeader(): HeadersInit {
   const token = localStorage.getItem("adminToken");
-  return token ? { authorization: `Bearer ${token}` } : {};
+  if (!token) {
+    return {};
+  }
+  return {
+    authorization: `Bearer ${token}`,
+  };
 }
 
 export default function AdminDashboard() {

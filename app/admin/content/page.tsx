@@ -5,9 +5,14 @@ import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/button";
 import { Container } from "../../../components/ui/container";
 
-function getAuthHeader() {
+function getAuthHeader(): HeadersInit {
   const token = localStorage.getItem("adminToken");
-  return token ? { authorization: `Bearer ${token}` } : {};
+  if (!token) {
+    return {};
+  }
+  return {
+    authorization: `Bearer ${token}`,
+  };
 }
 
 interface FieldConfig {

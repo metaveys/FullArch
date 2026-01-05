@@ -8,7 +8,7 @@ import { Container } from "../../../components/ui/container";
 function getAuthHeader(): HeadersInit {
   const token = localStorage.getItem("adminToken");
   if (!token) {
-    return {};
+    return {} as HeadersInit;
   }
   return {
     authorization: `Bearer ${token}`,

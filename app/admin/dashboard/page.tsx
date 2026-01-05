@@ -23,7 +23,7 @@ interface FormSubmission {
 function getAuthHeader(): HeadersInit {
   const token = localStorage.getItem("adminToken");
   if (!token) {
-    return {};
+    return {} as HeadersInit;
   }
   return {
     authorization: `Bearer ${token}`,

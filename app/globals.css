@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  @apply bg-background text-white antialiased;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+}
+
+a {
+  @apply text-primary;
+}
+
+.page-shell {
+  @apply min-h-screen flex flex-col bg-background bg-radial-fade;
+}
+
+.page-main {
+  @apply flex-1 pt-20 pb-24 md:pt-24 md:pb-16;
+}
+
+.section-shell {
+  @apply border border-border/60 bg-surface/70 backdrop-blur-sm rounded-3xl shadow-soft;
+}
+
+

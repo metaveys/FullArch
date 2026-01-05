@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
+  // Vercel için output: 'standalone' gerekli değil
 };
 
 export default nextConfig;

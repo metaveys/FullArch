@@ -20,10 +20,10 @@ interface FormSubmission {
   read: boolean;
 }
 
-function getAuthHeader(): HeadersInit {
+function getAuthHeader(): Record<string, string> | undefined {
   const token = localStorage.getItem("adminToken");
   if (!token) {
-    return {} as HeadersInit;
+    return undefined;
   }
   return {
     authorization: `Bearer ${token}`,
@@ -47,8 +47,9 @@ export default function AdminDashboard() {
 
   const loadSubmissions = async () => {
     try {
+      const authHeaders = getAuthHeader();
       const response = await fetch("/api/admin/submissions", {
-        headers: getAuthHeader(),
+        ...(authHeaders && { headers: authHeaders }),
       });
 
       if (response.status === 401) {
@@ -69,10 +70,11 @@ export default function AdminDashboard() {
 
   const markAsRead = async (id: string) => {
     try {
+      const authHeaders = getAuthHeader();
       await fetch("/api/admin/submissions", {
         method: "PATCH",
         headers: {
-          ...getAuthHeader(),
+          ...(authHeaders || {}),
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ id, action: "mark-read" }),
@@ -87,9 +89,10 @@ export default function AdminDashboard() {
     if (!confirm("Bu gönderiyi silmek istediğinizden emin misiniz?")) return;
 
     try {
+      const authHeaders = getAuthHeader();
       await fetch(`/api/admin/submissions?id=${id}`, {
         method: "DELETE",
-        headers: getAuthHeader(),
+        ...(authHeaders && { headers: authHeaders }),
       });
       loadSubmissions();
     } catch (error) {

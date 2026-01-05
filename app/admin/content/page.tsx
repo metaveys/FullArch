@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/button";
 import { Container } from "../../../components/ui/container";
 
-function getAuthHeader(): HeadersInit {
+function getAuthHeader(): Record<string, string> | undefined {
   const token = localStorage.getItem("adminToken");
   if (!token) {
-    return {} as HeadersInit;
+    return undefined;
   }
   return {
     authorization: `Bearer ${token}`,
@@ -58,8 +58,9 @@ export default function ContentEditor() {
 
   const loadContent = async () => {
     try {
+      const authHeaders = getAuthHeader();
       const response = await fetch("/api/admin/content", {
-        headers: getAuthHeader(),
+        ...(authHeaders && { headers: authHeaders }),
       });
 
       if (response.status === 401) {
@@ -83,10 +84,11 @@ export default function ContentEditor() {
 
     setSaving(true);
     try {
+      const authHeaders = getAuthHeader();
       const response = await fetch("/api/admin/content", {
         method: "PUT",
         headers: {
-          ...getAuthHeader(),
+          ...(authHeaders || {}),
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ content: editedContent }),
